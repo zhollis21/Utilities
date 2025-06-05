@@ -53,7 +53,7 @@ do {
     $page++
 } while ($response.Count -eq $perPage)
 
-if (-not $list -or $allRepos -lt 1) {
+if (!$allRepos) {
     Write-Host "`nNo Repos Returned" -ForegroundColor Red
     exit 1
 }
