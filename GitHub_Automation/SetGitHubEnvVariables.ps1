@@ -13,7 +13,7 @@
 #>
 
 # Configuration - Edit these values
-$repositoryName = "clayton-homes/vmf.orig.los"
+$repositoryName = "owner/repository-name"
 $variablesToSet = @(
     @{
         Name = "vmf_specific_vantage_event_url"

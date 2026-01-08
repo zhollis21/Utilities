@@ -13,7 +13,7 @@
 #>
 
 # Configuration - Edit these values
-$repositoryName = "clayton-homes/vmf.orig.los"
+$repositoryName = "owner/repository-name"
 $environments = @("dev", "itg", "qua", "prod")
 
 # Verify token is set
