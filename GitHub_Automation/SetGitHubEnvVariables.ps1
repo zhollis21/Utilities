@@ -16,11 +16,11 @@
 $repositoryName = "owner/repository-name"
 $variablesToSet = @(
     @{
-        Name = "vmf_specific_vantage_event_url"
-        Dev  = "https://vanderbiltmortgage--vmfdev1.sandbox.my.salesforce.com/services/data/v60.0/sobjects/VMF_LOS_Event__e"
-        Itg  = "https://vanderbiltmortgage--qa.sandbox.my.salesforce.com/services/oauth2/token"
-        Qua  = "https://vanderbiltmortgage--partial.sandbox.my.salesforce.com/services/oauth2/token"
-        Prod = "https://vanderbiltmortgage.my.salesforce.com/services/oauth2/token"
+        Name = "EXAMPLE_API_URL"
+        Dev  = "https://api-dev.example.com/v1/endpoint"
+        Itg  = "https://api-itg.example.com/v1/endpoint"
+        Qua  = "https://api-qua.example.com/v1/endpoint"
+        Prod = "https://api.example.com/v1/endpoint"
     }
     # @{
     #     Name = "DATABASE_HOST"
