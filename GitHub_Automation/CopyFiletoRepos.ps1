@@ -1,15 +1,29 @@
 [CmdletBinding()]
-# Define variables
-# INSTALL the GitHub CLI first (you should alraedy have Git Bash installed)
-# https://cli.github.com/
 
 <#
-    Required:
-    Set a GitHub Classic PAT as an environment variable before running:
+.SYNOPSIS
+    Copy a file to multiple GitHub repositories and create pull requests.
 
-    Add to your powershell profile with these 2 commands:
-    notepad $PROFILE
-    $env:GITHUB_TOKEN = "your-token-here"
+.DESCRIPTION
+    This script clones multiple repositories, copies a specified file to each one,
+    commits the change to a new branch, and creates a pull request for review.
+    It can target repositories from a GitHub team or personal repositories.
+
+.PREREQUISITES
+    - Git CLI: https://git-scm.com/downloads
+    - GitHub CLI: https://cli.github.com/
+    - GitHub Classic PAT set as environment variable
+
+.SETUP
+    Set a GitHub Classic PAT as an environment variable:
+    
+    Add to your PowerShell profile:
+        notepad $PROFILE
+        $env:GITHUB_TOKEN = "your-token-here"
+
+.NOTES
+    Configure the variables below before running:
+    - $org, $teamSlug, $targetDir, $sourceFile, etc.
 #>
 
 $org = "zhollis21"
@@ -61,18 +75,25 @@ if (!$allRepos) {
 # Confirm how many we got
 Write-Host "Total repos retrieved: $($allRepos.Count)"
 
-# Loop through each repository
-foreach ($repo in $allRepos) {
-    # Extract repo name
-    $repoName = $repo.full_name
-    Write-Host "`nUpdating $repoName ($loopCount of $($allRepos.Count))"
+# Initialize counter for progress tracking
+$loopCount = 1
 
-    # Clone the repository
-    git clone $fullRepoPath $repo
+# Loop through each repository and apply changes
+foreach ($repo in $allRepos) {
+    # Extract repo name and construct paths
+    $repoName = $repo.full_name
+    $shortRepoName = $repo.name
+    Write-Host "\nUpdating $repoName ($loopCount of $($allRepos.Count))"
+
+    # Clone the repository to the target directory
+    $fullRepoPath = $repo.clone_url
+    $repoPath = Join-Path $targetDir $shortRepoName
+    git clone $fullRepoPath $repoPath
 
     # Change to repo directory
     Set-Location $repoPath
 
+    # Determine which base branch exists (develop, main, or master)
     $remoteBranches = git branch -r
 
     if ($remoteBranches -match "origin/develop") {
@@ -113,13 +134,13 @@ foreach ($repo in $allRepos) {
     #>
     if ($rerunning) {
         # Remove Topics on repo
-        $command = "gh repo edit Pipeline-1-0/$repoName --remove-topic vmf --remove-topic originations"
+        $command = "gh repo edit $org/$repoName --remove-topic my-topic --remove-topic my-topic-2"
         Invoke-Expression $command
     }
     
     
     # Add Topics to repo
-    $command = "gh repo edit Pipeline-1-0/$repoName --add-topic vmf --add-topic originations"
+    $command = "gh repo edit $org/$repoName --add-topic my-topic --add-topic my-topic-2"
     Invoke-Expression $command 
 
     # Return to original directory
@@ -127,4 +148,7 @@ foreach ($repo in $allRepos) {
 
     # Delete the local repository
     Remove-Item -Recurse -Force $repoPath
+    
+    # Increment loop counter
+    $loopCount++
 }

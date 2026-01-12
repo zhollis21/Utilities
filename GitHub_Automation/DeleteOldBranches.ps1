@@ -1,12 +1,39 @@
-$repo = "/my-repo.git"
-$baseBranch = "develop"
+<#
+.SYNOPSIS
+    Analyze and identify merged feature branches in a GitHub repository.
 
-# Counters
-$deletedCount = 0
-$skippedCount = 0
+.DESCRIPTION
+    This script analyzes feature branches to determine which ones have been merged into 
+    the base branch (develop/main/master) by comparing commit messages. Branches with 80% 
+    or more matching commits are considered merged. Also skips branches older than 12 months.
+
+.PREREQUISITES
+    - Git CLI: https://git-scm.com/downloads
+    - Access to the GitHub repository
+    - SSH key configured for GitHub access (if using SSH URLs)
+
+.SETUP
+    Configure the variables below before running:
+    - $repo: Repository path (e.g., "/my-repo.git")
+    - $baseBranch: Base branch to compare against (e.g., "develop", "main")
+    - $repobase: GitHub organization base URL
+
+.NOTES
+    - Branches are NOT automatically deleted, only analyzed
+    - Uses commit message matching (80% threshold) to detect merged branches
+    - Skips branches older than 12 months
+#>
+
+# Configuration - Edit these values
+$repo = "/my-repo.git"              # Repository name with .git extension
+$baseBranch = "develop"              # Base branch to compare feature branches against
+
+# Counters for tracking results
+$deletedCount = 0  # Branches that appear merged or are too old
+$skippedCount = 0  # Branches that likely are NOT merged
 
 # Define the GitHub repository URL and local path
-$repobase = "git@github.com:MyOrg"
+$repobase = "git@github.com:MyOrg"  # GitHub organization base URL
 $repoUrl = $repobase + $repo
 $repoName = ($repo -split "/")[-1] -replace ".git", ""
 $localPath = Join-Path "C:\GitHub" $repoName
@@ -33,6 +60,7 @@ $featureBranches = git branch -r | Where-Object { $_ -match "feature/" }
 $branchNumber = 1
 $branchCount = $featureBranches.Count
 
+# Analyze each feature branch to determine merge status
 foreach ($branch in $featureBranches) {
     $shortName = ($branch -replace "origin/", "").Trim()
 

@@ -1,15 +1,31 @@
 [CmdletBinding()]
-# Define variables
-# INSTALL the GitHub CLI first (you should alraedy have Git Bash installed)
-# https://cli.github.com/
 
 <#
-    Required:
-    Set a GitHub Classic PAT as an environment variable before running:
+.SYNOPSIS
+    Automate GitHub repository settings for multiple repositories.
 
-    Add to your powershell profile with these 2 commands:
-    notepad $PROFILE
-    $env:GITHUB_TOKEN = "your-token-here"
+.DESCRIPTION
+    This script applies consistent settings across multiple GitHub repositories including:
+    - Merge strategy configuration (squash merge only)
+    - Repository topics management
+    - Branch protection rules
+    - Team access permissions
+    - Default branch configuration
+
+.PREREQUISITES
+    - GitHub CLI: https://cli.github.com/
+    - GitHub Classic PAT set as environment variable
+
+.SETUP
+    Set a GitHub Classic PAT as an environment variable:
+    
+    Add to your PowerShell profile:
+        notepad $PROFILE
+        $env:GITHUB_TOKEN = "your-token-here"
+
+.NOTES
+    Configure the variables below before running:
+    - $org, $teamSlug, $branchesToProtect, $teamsToGiveAccess
 #>
 
 $org = "zhollis21"

@@ -1,15 +1,27 @@
 [CmdletBinding()]
-# Define variables
-# INSTALL the GitHub CLI first (you should already have Git Bash installed)
-# https://cli.github.com/
 
 <#
-    Required:
-    Set a GitHub Classic PAT as an environment variable before running:
+.SYNOPSIS
+    Set GitHub environment variables across multiple environments.
 
-    Add to your powershell profile with these 2 commands:
-    notepad $PROFILE
-    $env:GITHUB_TOKEN = "your-token-here"
+.DESCRIPTION
+    This script creates or updates environment variables in GitHub repository environments
+    using the GitHub REST API. Supports setting different values per environment (dev, itg, qua, prod).
+    Includes verification step to confirm variables were set correctly.
+
+.PREREQUISITES
+    - GitHub Classic PAT set as environment variable
+
+.SETUP
+    Set a GitHub Classic PAT as an environment variable:
+    
+    Add to your PowerShell profile:
+        notepad $PROFILE
+        $env:GITHUB_TOKEN = "your-token-here"
+
+.NOTES
+    - Configure $repositoryName and $variablesToSet array before running
+    - Each variable object needs Name, Dev, Itg, Qua, and Prod properties
 #>
 
 # Configuration - Edit these values
